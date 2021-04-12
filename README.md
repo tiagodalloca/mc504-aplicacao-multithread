@@ -22,5 +22,5 @@ A mãe gerencia o acesso das filhas a lista de presente e faz a contagem da list
 
 ## Vídeo
 
-[TEM QUE FAZER UM VÍDEO APARENTEMENTE]
+[Link para o vídeo]
 
