@@ -12,9 +12,19 @@
 volatile Lista lista;
 volatile short unsigned int interesse[N_FILHAS];
 volatile short unsigned int rc;
+volatile short unsigned int finish;
+
+int tamanho_lista(){
+	int i = 0;
+	for (Node* node = lista.cabeca; node != NULL; node = node->next)
+		i++;
+	
+	return i;
+}
 
 void* mae(void *v) {
-  int i;
+  int i,j;
+  finish = 0;
 
 	while (1) {
 		for (i = 0; i < N_FILHAS; i++) {
@@ -24,11 +34,10 @@ void* mae(void *v) {
 			}
 		}
 
-		i = 0;
-		for (Node* node = lista.cabeca; node != NULL; node = node->next)
-			i++;
+		i = tamanho_lista();
 
 		if (i >= MAX_PEDIDOS) {
+			finish = 1;
 			printf("-- Pedidos --\n");
 			for (Node* node = lista.cabeca; node != NULL; node = node->next) {
 				printf("%s\n", (char*)node->content);
@@ -61,10 +70,21 @@ const char* get_pedido_filha(unsigned short int filha_id, unsigned short int n_p
 void* filha_generica(void* v) {
 	unsigned short int thr_id = *(unsigned short int*)v;
 	char* nome_filha = get_nome_filha(thr_id);
+	int j;
 
 	for (unsigned short int i = 0;;i++){
 		interesse[thr_id] = 1;
-    while (rc != thr_id); /* Espera ser a vez desta thread */
+		while (rc != thr_id){
+			if (finish == 1)
+			{
+				return NULL;
+			}	
+		}
+		
+		if (finish == 1)
+			{
+				return NULL;
+			}
 
 		if (rand() % 2) {
 			const char* pedido = get_pedido_filha(thr_id, i);
@@ -81,7 +101,6 @@ void* filha_generica(void* v) {
     rc = -1;
     sleep(1);
   }
-  return NULL;
 }
 
 int main(int argc, char** args){
@@ -95,11 +114,13 @@ int main(int argc, char** args){
 	pthread_create(&thr_gerente, NULL, mae, NULL);
 
 	for (i = 0; i < N_FILHAS; i++) {
-    id[i] = i;
-    pthread_create(&thr[i], NULL, filha_generica, &id[i]);
+		id[i] = i;
+		pthread_create(&thr[i], NULL, filha_generica, &id[i]);
 	}
 
-	for (i = 0; i < N_FILHAS; i++) 
+	for (i = 0; i < N_FILHAS; i++){
+		pthread_join(thr[i],NULL);
+	}
     pthread_join(thr_gerente, NULL);
 
 	free_lista(lista);
