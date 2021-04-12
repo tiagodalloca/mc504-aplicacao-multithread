@@ -16,6 +16,10 @@ A mãe e as filhas são implementadas como três pthreads.
 
 A mãe gerencia o acesso das filhas a lista de presente e faz a contagem da lista até ficar cheia. Quando cheia, a lista é esvaziada.
 
+## Compilação
+
+`gcc src/* -o build/main -lpthread`
+
 ## Vídeo
 
 [TEM QUE FAZER UM VÍDEO APARENTEMENTE]
