@@ -18,9 +18,19 @@ Lista add_lista(Lista lst, void* content) {
 
 Lista remove_lista(Lista lst) {
 	Node* old = lst.cabeca;
+
+	if (old == NULL)
+		return lst;
+
 	lst.cabeca = old->next;
 	free(old->content);
 	free(old);
+
 	return lst;
 }
+
+void free_lista(Lista lst) {
+	while (lst.cabeca != NULL) lst = remove_lista(lst);
+}
+
 
