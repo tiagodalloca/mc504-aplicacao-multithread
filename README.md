@@ -26,5 +26,7 @@ https://www.youtube.com/watch?v=r1BElBWsseQ
 
 ## Grupo
 Tiago Dall'Oca RA:206341
+
 Heigon Soldera RA:217638
+
 Piethro César  RA:223549
